@@ -7,7 +7,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 2. CSS STYLING (ANIMASI HOVER & TAMPILAN KEREN) ---
+# --- 2. CSS STYLING (UPGRADE TABS & SOCIAL CARDS) ---
 st.markdown("""
 <style>
     /* 1. PENGATURAN JARAK ATAS */
@@ -34,16 +34,55 @@ st.markdown("""
         font-style: italic;
     }
 
-    /* 3. TABS STYLING */
-    button[data-baseweb="tab"] {
-        font-size: 1.1rem;
+    /* --- 3. NEW: KEREN BANGET TABS STYLING (PILL SHAPE) --- */
+    
+    /* Container Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px; /* Jarak antar tab */
+        background-color: transparent;
+        padding: 10px 0;
+        border-radius: 0px;
+        display: flex;
+        justify-content: center; /* POSISI TENGAH */
+        border-bottom: 1px solid #f0f0f0; /* Garis tipis di bawah untuk rapi */
+    }
+
+    /* Tombol Tab (Belum Dipilih) */
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        white-space: pre-wrap;
+        background-color: #f8f9fa; /* Warna abu muda */
+        border-radius: 25px; /* Membuat bulat seperti kapsul */
+        color: #4a4a4a;
         font-weight: 600;
-        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        padding: 0 25px; /* Lebar tombol */
+        border: 1px solid transparent;
+        transition: all 0.3s ease-in-out; /* Animasi halus */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    button[data-baseweb="tab"][aria-selected="true"] {
-        color: #b30000 !important;
-        border-bottom-color: #b30000 !important;
+
+    /* Saat Mouse Hover ke Tab */
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #ffebeb; /* Merah sangat muda */
+        color: #b30000;
+        transform: translateY(-2px); /* Naik sedikit */
     }
+
+    /* Tombol Tab (SAAT DIPILIH / AKTIF) */
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background-color: #b30000 !important; /* Merah Natal */
+        color: white !important;
+        box-shadow: 0 4px 10px rgba(179, 0, 0, 0.3); /* Efek glow merah */
+        transform: scale(1.05); /* Sedikit membesar */
+    }
+    
+    /* Hilangkan garis merah default Streamlit di atas tab */
+    .stTabs [data-baseweb="tab-highlight"] {
+        background-color: transparent !important; 
+    }
+
+    /* ------------------------------------------------------ */
 
     /* 4. WELCOME CARD STYLING */
     .welcome-text {
@@ -52,7 +91,7 @@ st.markdown("""
         line-height: 1.6;
     }
     
-    /* --- 5. CSS KHUSUS SOCIAL MEDIA CARD (NEW!) --- */
+    /* 5. CSS KHUSUS SOCIAL MEDIA CARD */
     .social-card {
         background-color: white;
         border: 1px solid #e0e0e0;
@@ -61,23 +100,19 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 20px;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Animasi halus */
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         margin-bottom: 15px;
-        text-decoration: none; /* Hilangkan garis bawah link */
+        text-decoration: none;
         color: inherit;
         position: relative;
         overflow: hidden;
     }
-
-    /* EFEK SAAT MOUSE HOVER (DIARAHKAN) */
     .social-card:hover {
-        transform: translateY(-7px); /* Kartu naik ke atas */
-        box-shadow: 0 15px 25px rgba(0,0,0,0.15); /* Bayangan menebal */
-        border-color: transparent; /* Border asli hilang diganti glow */
+        transform: translateY(-7px);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+        border-color: transparent;
     }
-
-    /* Icon Styling */
     .social-icon-img {
         width: 60px;
         height: 60px;
@@ -85,10 +120,8 @@ st.markdown("""
         transition: transform 0.3s ease;
     }
     .social-card:hover .social-icon-img {
-        transform: scale(1.1); /* Icon membesar sedikit saat hover */
+        transform: scale(1.1);
     }
-
-    /* Text Styling inside Card */
     .social-content h4 {
         margin: 0;
         font-size: 1.1rem;
@@ -100,8 +133,6 @@ st.markdown("""
         font-size: 0.85rem;
         color: #666;
     }
-
-    /* Tombol Palsu (Styling Only) */
     .fake-btn {
         display: inline-block;
         padding: 6px 15px;
@@ -136,7 +167,7 @@ st.markdown("""
 st.markdown('<p class="main-header">🎄 Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">"Mempererat Persaudaraan, Mewujudkan Pelayanan Kasih"</p>', unsafe_allow_html=True)
 
-# --- 4. TABS NAVIGATION ---
+# --- 4. TABS NAVIGATION (SEKARANG SUDAH DI-STYLE VIA CSS DI ATAS) ---
 tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
 
 # --- TAB 1: BERANDA ---
@@ -170,14 +201,12 @@ with tab_beranda:
         </div>
         """, unsafe_allow_html=True)
 
-# --- TAB 2: MEDIA SOSIAL (DENGAN ANIMASI HOVER) ---
+# --- TAB 2: MEDIA SOSIAL ---
 with tab_medsos:
     st.markdown("### 📱 Tetap Terhubung Bersama Kami")
     st.caption("Ikuti update terbaru seputar kegiatan, ibadah, dan dokumentasi acara melalui kanal resmi kami.")
 
-    # Fungsi Python untuk merender HTML Card
     def render_social_card_html(platform, handle, link, icon_url, color_theme):
-        # Kita menyuntikkan CSS border-left warna-warni langsung di elemen
         return f"""
         <a href="{link}" target="_blank" class="social-card" style="border-left: 5px solid {color_theme};">
             <div class="social-icon">
@@ -198,14 +227,14 @@ with tab_medsos:
             "Instagram", "@disdikdki_kriskath", 
             "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", 
-            "#E1306C"  # Warna Pink Instagram
+            "#E1306C"
         ), unsafe_allow_html=True)
         
         st.markdown(render_social_card_html(
             "YouTube", "Komunitas Kristen Disdik", 
             "https://www.youtube.com/@kristen_katolik_disdik_dki", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", 
-            "#FF0000" # Warna Merah YouTube
+            "#FF0000"
         ), unsafe_allow_html=True)
 
     with col2:
@@ -213,14 +242,14 @@ with tab_medsos:
             "TikTok", "@disdik_kristen_katolik", 
             "https://www.tiktok.com/@disdik_kristen_katolik", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png", 
-            "#000000" # Warna Hitam TikTok
+            "#000000"
         ), unsafe_allow_html=True)
         
         st.markdown(render_social_card_html(
             "Facebook", "Persekutuan Doa Disdik", 
             "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png", 
-            "#1877F2" # Warna Biru Facebook
+            "#1877F2"
         ), unsafe_allow_html=True)
 
 # --- FOOTER ---
