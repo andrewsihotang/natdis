@@ -144,15 +144,15 @@ elif selected_page == "Media Sosial":
 
     row1_col1, row1_col2 = st.columns(2)
     with row1_col1:
-        social_card("Instagram", "@disdikdki_kriskath", "Info terbaru via story.", "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", "#E1306C")
+        social_card("Instagram", "@disdikdki_kriskath", "Akun Instagram Resmi Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", "#E1306C")
     with row1_col2:
-        social_card("TikTok", "@disdik_kristen_katolik", "BTS dan konten kreatif.", "https://www.tiktok.com/@disdik_kristen_katolik", "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png", "#000000")
+        social_card("TikTok", "@disdik_kristen_katolik", "Akun Tiktok Resmi Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", "https://www.tiktok.com/@disdik_kristen_katolik", "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png", "#000000")
         
     row2_col1, row2_col2 = st.columns(2)
     with row2_col1:
-        social_card("YouTube", "Komunitas Kristen Disdik DKI", "Live streaming Ibadah.", "https://www.youtube.com/@kristen_katolik_disdik_dki", "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", "#FF0000")
+        social_card("YouTube", "Komunitas Kristen Disdik DKI", "Akun Youtube Resmi Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", "https://www.youtube.com/@kristen_katolik_disdik_dki", "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", "#FF0000")
     with row2_col2:
-        social_card("Facebook", "Persekutuan Doa Disdik DKI", "Album foto & sharing.", "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png", "#1877F2")
+        social_card("Facebook", "Persekutuan Doa Disdik DKI", "Akun Facebook Resmi Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png", "#1877F2")
         
     st.markdown("---")
     st.success("💡 **Tips:** Klik tombol di atas untuk langsung membuka aplikasi.")
@@ -192,4 +192,5 @@ elif selected_page == "Upload Dokumentasi":
 # --- FOOTER ---
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: var(--text-color); opacity: 0.7; font-size: 0.8em;'>Dibuat oleh Tim Multimedia - Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
+
 
