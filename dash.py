@@ -4,14 +4,13 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 
 # --- KONFIGURASI GOOGLE DRIVE ---
-# ID Folder dari link yang Anda berikan sebelumnya
+# ID Folder sesuai link yang Anda berikan
 PARENT_FOLDER_ID = "1nxAejoI_zoYfLhav6xIevj_tzdKDxx4X"
 
 def upload_to_drive(file_obj, file_name, mime_type):
-    def upload_to_drive(file_obj, file_name, mime_type):
     """Fungsi untuk mengupload file ke Google Drive via Service Account"""
     try:
-        # Cek apakah Secrets sudah ada
+        # Cek konfigurasi Secrets
         if "gcp_service_account" not in st.secrets:
             st.error("Konfigurasi Secrets tidak ditemukan. Harap setting di Dashboard Streamlit.")
             return None, None
@@ -23,7 +22,7 @@ def upload_to_drive(file_obj, file_name, mime_type):
             scopes=['https://www.googleapis.com/auth/drive']
         )
         
-        # Gunakan cache_discovery=False untuk menghindari error di beberapa environment
+        # Gunakan cache_discovery=False untuk stabilitas di Streamlit Cloud
         service = build('drive', 'v3', credentials=creds, cache_discovery=False)
 
         file_metadata = {
@@ -31,8 +30,9 @@ def upload_to_drive(file_obj, file_name, mime_type):
             'parents': [PARENT_FOLDER_ID]
         }
         
-        # --- PERUBAHAN PENTING DI SINI (resumable=False) ---
-        # Kita matikan resumable upload agar file langsung masuk ke storage pemilik folder
+        # --- PERBAIKAN UTAMA DI SINI ---
+        # resumable=False: File langsung dikirim ke folder tujuan (memakai kuota pemilik folder),
+        # sehingga tidak memakan kuota Service Account yang 0 GB.
         media = MediaIoBaseUpload(file_obj, mimetype=mime_type, resumable=False)
         
         file = service.files().create(
@@ -233,7 +233,7 @@ elif selected_page == "Upload Dokumentasi":
             if submitted:
                 if uploaded_file is not None and name:
                     with st.spinner('Sedang mengirim file ke Drive... mohon tunggu...'):
-                        # Format nama file agar rapi di Drive: [Kategori] - [Nama Pengirim] - [Nama File]
+                        # Format nama file: [Kategori] - [Nama Pengirim] - [Nama File]
                         final_filename = f"[{category}] - {name} - {uploaded_file.name}"
                         
                         # Proses Upload
@@ -251,4 +251,3 @@ elif selected_page == "Upload Dokumentasi":
 # --- FOOTER ---
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: var(--text-color); opacity: 0.7; font-size: 0.8em;'>Dibuat oleh Tim Multimedia - Natal Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
-
