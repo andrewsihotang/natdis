@@ -2,7 +2,7 @@ import streamlit as st
 
 # --- 1. PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="Natal Dinas Pendidikan DKI Jakarta",
+    page_title="Komunitas Kristen & Katolik Disdik DKI",
     page_icon="🎄",
     layout="wide"
 )
@@ -51,12 +51,12 @@ st.markdown("""
         text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
     .sub-header {
-        font-size: 1.1rem; 
+        font-size: 1.3rem; /* Sedikit diperbesar agar nama Dinas terbaca jelas */
         color: #555555 !important;
         text-align: center; 
         margin-bottom: 2rem;
         opacity: 0.9;
-        font-style: italic;
+        font-weight: 600; /* Sedikit lebih tebal */
     }
 
     /* --- 4. TABS STYLING (FIXED COLOR) --- */
@@ -199,9 +199,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. HEADER SECTION ---
-st.markdown('<p class="main-header">Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">"Mempererat Persaudaraan, Mewujudkan Pelayanan Kasih"</p>', unsafe_allow_html=True)
+# --- 3. HEADER SECTION (DIPERBARUI) ---
+# Judul dipecah agar terlihat proporsional (Nama Komunitas di atas, Nama Dinas di bawah)
+st.markdown('<p class="main-header">Komunitas Kristen & Katolik</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
 
 # --- 4. TABS NAVIGATION ---
 tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
@@ -290,4 +291,3 @@ with tab_medsos:
 
 # --- FOOTER ---
 st.markdown('<p class="footer-text">Tim Multimedia - Komunitas Kristen & Katolik Disdik DKI Jakarta</p>', unsafe_allow_html=True)
-
