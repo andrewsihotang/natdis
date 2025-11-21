@@ -95,15 +95,17 @@ def header():
 
 # --- 5. SIDEBAR NAVIGATION ---
 with st.sidebar:
-    # Updated Logo (Using 'raw' link to ensure image loads)
-    st.image("https://github.com/andrewsihotang/natdis/blob/main/logo_komunitas.png", use_container_width=True)
+    # Updated Logo (Using 'raw' link to ensure image loads correctly)
+    st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
     
-    st.header("Menu Navigasi")
+    # REMOVED: st.header("Menu Navigasi")
     
+    # REMOVED Label: "Pilih Halaman:" set to hidden
     selected_page = st.radio(
-        "Pilih Halaman:", 
+        "Menu Navigasi", 
         ["Beranda", "Media Sosial", "Upload Dokumentasi"],
-        key="page" 
+        key="page",
+        label_visibility="collapsed" # This hides the title completely
     )
     
     st.markdown("---")
@@ -168,7 +170,7 @@ elif selected_page == "Media Sosial":
     row1_col1, row1_col2 = st.columns(2)
     row2_col1, row2_col2 = st.columns(2)
 
-    # INSTAGRAM (Updated Link)
+    # INSTAGRAM
     with row1_col1:
         social_card(
             "Instagram", 
@@ -179,7 +181,7 @@ elif selected_page == "Media Sosial":
             "#E1306C"
         )
 
-    # TIKTOK (Updated Link)
+    # TIKTOK
     with row1_col2:
         social_card(
             "TikTok", 
@@ -190,7 +192,7 @@ elif selected_page == "Media Sosial":
             "#000000"
         )
 
-    # YOUTUBE (Updated Link)
+    # YOUTUBE
     with row2_col1:
         social_card(
             "YouTube", 
@@ -201,7 +203,7 @@ elif selected_page == "Media Sosial":
             "#FF0000"
         )
 
-    # FACEBOOK (Updated Link)
+    # FACEBOOK
     with row2_col2:
         social_card(
             "Facebook", 
@@ -246,6 +248,3 @@ elif selected_page == "Upload Dokumentasi":
 # --- FOOTER ---
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: grey; font-size: 0.8em;'>Dibuat oleh Tim Multimedia - Natal Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
-
-
-
