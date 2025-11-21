@@ -14,7 +14,7 @@ if 'page' not in st.session_state:
 def navigate_to(page_name):
     st.session_state.page = page_name
 
-# --- 3. CSS STYLING (RESPONSIVE SIDEBAR MENU) ---
+# --- 3. CSS STYLING (FIXED FULL WIDTH RESPONSIVE) ---
 st.markdown("""
 <style>
     /* HEADER STYLING */
@@ -32,48 +32,49 @@ st.markdown("""
         margin-bottom: 2rem;
     }
 
-    /* --- NAVIGATION TABS STYLING (DINAMIS) --- */
+    /* --- NAVIGATION TABS STYLING (FORCE FULL WIDTH) --- */
     
-    /* 1. Sembunyikan bulatan radio button default */
+    /* 1. Hilangkan lingkaran radio button */
     [data-testid="stSidebar"] [role="radiogroup"] > label > div:first-child { 
-        display: none; 
+        display: none !important; 
     }
     
-    /* 2. Styling Kotak Menu (Responsive) */
+    /* 2. Styling Container Utama Tombol */
+    [data-testid="stSidebar"] [role="radiogroup"] {
+        width: 100% !important;
+    }
+
+    /* 3. Styling Kotak Tombol agar Dinamis */
     [data-testid="stSidebar"] [role="radiogroup"] > label {
-        /* Layout & Sizing */
-        display: flex;              /* Menggunakan Flexbox agar isi menyesuaikan */
-        align-items: center;        /* Vertikal center */
-        justify-content: center;    /* Horizontal center */
-        width: 100%;                /* Lebar penuh mengikuti sidebar */
-        box-sizing: border-box;     /* PENTING: Padding dihitung di dalam lebar total */
+        display: flex !important;
+        justify-content: center !important; /* Teks selalu di tengah */
+        align-items: center !important;
         
-        /* Tampilan */
-        padding: 12px 10px;         /* Padding yang aman */
+        width: 100% !important;      /* Paksa lebar penuh */
+        margin-right: 0 !important;  /* Hapus margin kanan default */
+        padding: 12px 0px !important; /* Padding atas bawah */
+        
         background-color: var(--background-color); 
         color: var(--text-color);
         border-radius: 8px;
         margin-bottom: 8px;
         border: 1px solid rgba(128, 128, 128, 0.2);
-        transition: all 0.2s ease-in-out;
+        transition: all 0.2s;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         
-        /* Text Handling (Agar teks turun ke bawah jika sidebar sempit) */
-        text-align: center;
-        white-space: normal !important; 
-        line-height: 1.2;
+        /* Agar teks tidak tumpuk */
+        white-space: nowrap; 
     }
 
-    /* 3. Hover effect */
+    /* 4. Hover effect */
     [data-testid="stSidebar"] [role="radiogroup"] > label:hover {
         border-color: #b30000;
         color: #b30000;
         cursor: pointer;
         background-color: var(--secondary-background-color);
-        transform: scale(1.01); /* Efek zoom sedikit saat hover */
     }
 
-    /* 4. Active/Selected State */
+    /* 5. Active/Selected State */
     [data-testid="stSidebar"] [role="radiogroup"] > label[aria-checked="true"] {
         background-color: #b30000 !important;
         border-color: #b30000;
@@ -84,13 +85,6 @@ st.markdown("""
     [data-testid="stSidebar"] [role="radiogroup"] > label[aria-checked="true"] p {
         color: white !important;
         font-weight: bold;
-    }
-    
-    /* LOCATION CARD STYLING */
-    .location-card:hover {
-        transform: translateY(-3px);
-        transition: transform 0.3s ease;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -106,7 +100,7 @@ with st.sidebar:
     # Logo
     st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
     
-    # Menu Navigasi
+    # Menu Navigasi (Tanpa Label Judul)
     selected_page = st.radio(
         "Menu Navigasi", 
         ["Beranda", "Media Sosial"], 
@@ -114,43 +108,7 @@ with st.sidebar:
         label_visibility="collapsed" 
     )
     
-    st.markdown("---")
-    
-    # --- LOCATION CARD ---
-    st.markdown("### 📍 Lokasi Acara")
-    MAPS_LINK = "https://www.google.com/maps/search/?api=1&query=Dinas+Pendidikan+Provinsi+DKI+Jakarta"
-    
-    st.markdown(f"""
-    <div class="location-card" style="
-        background-color: var(--secondary-background-color);
-        border-radius: 12px;
-        padding: 15px;
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-        transition: all 0.3s ease;
-    ">
-        <div style="font-size: 2rem; margin-bottom: 8px;">🏢</div>
-        <p style="font-weight: bold; margin: 0; font-size: 0.95rem; color: var(--text-color);">Gedung Dinas Pendidikan</p>
-        <p style="font-size: 0.8rem; margin: 4px 0 12px 0; color: var(--text-color); opacity: 0.8;">
-            Provinsi DKI Jakarta
-        </p>
-        <a href="{MAPS_LINK}" target="_blank" style="
-            text-decoration: none;
-            background-color: #b30000;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-            transition: 0.3s;
-        ">
-            🗺️ Buka Peta
-        </a>
-    </div>
-    """, unsafe_allow_html=True)
+    # Bagian Lokasi sudah DIHAPUS sesuai permintaan.
 
 # --- PAGE 1: BERANDA ---
 if selected_page == "Beranda":
