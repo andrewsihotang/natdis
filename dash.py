@@ -7,54 +7,48 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 2. CSS STYLING (FORCE LIGHT MODE & FESTIVE DESIGN) ---
+# --- 2. CSS STYLING (FIXED TEXT COLOR ON TABS) ---
 st.markdown("""
 <style>
     /* --- 1. FORCE LIGHT MODE (MEMAKSA TAMPILAN PUTIH) --- */
     
-    /* Memaksa latar belakang halaman jadi Putih */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
     }
-    
-    /* Memaksa Header (Top Bar) jadi Putih */
     [data-testid="stHeader"] {
-        background-color: rgba(255, 255, 255, 0.0) !important; /* Transparan/Putih */
+        background-color: rgba(255, 255, 255, 0.0) !important;
     }
     
-    /* Memaksa warna teks dasar jadi Gelap (Hitam) */
+    /* GLOBAL TEXT COLOR: Hitam (Default) */
+    /* Kita gunakan selector umum, tapi nanti kita override khusus untuk Tab Aktif */
     body, .stMarkdown, .stText, h1, h2, h3, h4, h5, h6, p, li, div {
         color: #333333 !important;
     }
 
     /* --- 2. HEADER & GENERAL LAYOUT --- */
-    
     .block-container {
         padding-top: 3.5rem !important;
         padding-bottom: 2rem !important;
     }
-    
     .main-header {
         font-size: 2.3rem;
-        color: #b30000 !important; /* Merah Natal Solid */
+        color: #b30000 !important;
         text-align: center; 
         font-weight: 800;
         margin-top: 0px;
         margin-bottom: 5px;
-        /* Sedikit bayangan agar tajam */
         text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
-    
     .sub-header {
         font-size: 1.1rem; 
-        color: #555555 !important; /* Abu gelap (bukan putih) */
+        color: #555555 !important;
         text-align: center; 
         margin-bottom: 2rem;
         opacity: 0.9;
         font-style: italic;
     }
 
-    /* --- 3. TABS STYLING (PILL SHAPE - LIGHT MODE OPTIMIZED) --- */
+    /* --- 3. TABS STYLING (FIXED COLOR ISSUE) --- */
     
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
@@ -66,38 +60,55 @@ st.markdown("""
         border-bottom: 1px solid #eeeeee;
     }
 
-    /* Tombol Tab Pasif */
+    /* Tombol Tab (Pasif / Tidak Dipilih) */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         white-space: pre-wrap;
-        background-color: #f4f4f4 !important; /* Abu sangat muda */
+        background-color: #f4f4f4 !important;
         border-radius: 25px;
-        color: #555555 !important;
-        font-weight: 600;
-        font-size: 1rem;
-        padding: 0 25px;
         border: 1px solid #e0e0e0;
         transition: all 0.3s ease-in-out;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding: 0 25px;
+    }
+    
+    /* Memastikan teks tab pasif berwarna abu gelap */
+    .stTabs [data-baseweb="tab"] p, 
+    .stTabs [data-baseweb="tab"] div {
+        color: #555555 !important;
+        font-weight: 600;
+        font-size: 1rem;
     }
 
     /* Tombol Tab Hover */
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: #fff0f0 !important; /* Merah muda pudar */
-        color: #b30000 !important;
+        background-color: #fff0f0 !important;
         border-color: #ffcccc;
         transform: translateY(-2px);
     }
+    .stTabs [data-baseweb="tab"]:hover p,
+    .stTabs [data-baseweb="tab"]:hover div {
+        color: #b30000 !important; /* Teks jadi merah saat hover */
+    }
 
-    /* Tombol Tab AKTIF (Dipilih) */
+    /* --- PERBAIKAN UTAMA DI SINI (TAB AKTIF) --- */
+    
+    /* Background Merah untuk Tab Aktif */
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        background-color: #b30000 !important; /* Merah Solid */
-        color: #ffffff !important; /* Teks Putih */
+        background-color: #b30000 !important;
         box-shadow: 0 4px 10px rgba(179, 0, 0, 0.3);
         transform: scale(1.05);
         border: none;
     }
-    
+
+    /* MEMAKSA TEKS DI DALAM TAB AKTIF MENJADI PUTIH */
+    /* Kita targetkan elemen p dan div di dalam tab yang terpilih */
+    .stTabs [data-baseweb="tab"][aria-selected="true"] p,
+    .stTabs [data-baseweb="tab"][aria-selected="true"] div {
+        color: #ffffff !important; /* INI KUNCINYA: override global color */
+        opacity: 1 !important;
+    }
+
     /* Hilangkan highlight bawaan */
     .stTabs [data-baseweb="tab-highlight"] {
         background-color: transparent !important; 
@@ -111,17 +122,14 @@ st.markdown("""
         line-height: 1.6;
         color: #333333;
     }
-    
-    /* Container Box agar backgroundnya putih bersih */
     [data-testid="stVerticalBlockBorderWrapper"] {
         background-color: white;
         border-radius: 10px;
     }
 
-    /* --- 5. SOCIAL MEDIA CARD (CLEAN WHITE LOOK) --- */
-    
+    /* --- 5. SOCIAL MEDIA CARD --- */
     .social-card {
-        background-color: #ffffff; /* Putih mutlak */
+        background-color: #ffffff;
         border: 1px solid #e0e0e0;
         border-radius: 15px;
         padding: 20px;
@@ -129,43 +137,37 @@ st.markdown("""
         align-items: center;
         gap: 20px;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Soft shadow */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         margin-bottom: 15px;
         text-decoration: none;
         position: relative;
         overflow: hidden;
     }
-    
     .social-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1); /* Shadow lebih kuat saat hover */
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         border-color: transparent;
     }
-
     .social-icon-img {
         width: 60px;
         height: 60px;
         object-fit: contain;
         transition: transform 0.3s ease;
     }
-    
     .social-card:hover .social-icon-img {
         transform: scale(1.1);
     }
-
     .social-content h4 {
         margin: 0;
         font-size: 1.1rem;
-        color: #222222 !important; /* Hitam pekat */
+        color: #222222 !important;
         font-weight: 700;
     }
-    
     .social-content p {
         margin: 2px 0 8px 0;
         font-size: 0.85rem;
-        color: #666666 !important; /* Abu */
+        color: #666666 !important;
     }
-
     .fake-btn {
         display: inline-block;
         padding: 6px 15px;
@@ -177,7 +179,6 @@ st.markdown("""
         font-weight: 600;
         transition: background 0.3s;
     }
-    
     .social-card:hover .fake-btn {
         background-color: #b30000;
         color: white !important;
@@ -196,7 +197,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. HEADER SECTION (SOLID RED IS BACK) ---
+# --- 3. HEADER SECTION ---
 st.markdown('<p class="main-header">🎄 Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">"Mempererat Persaudaraan, Mewujudkan Pelayanan Kasih"</p>', unsafe_allow_html=True)
 
@@ -206,7 +207,6 @@ tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
 # --- TAB 1: BERANDA ---
 with tab_beranda:
     with st.container(border=True):
-        # Karena kita memaksa warna teks hitam di CSS, kita perlu memastikan header markdown juga hitam
         st.markdown("<h3 style='color: #333;'>✨ Damai Sejahtera Bagi Kita Semua</h3>", unsafe_allow_html=True)
         st.markdown("---")
         
