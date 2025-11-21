@@ -7,131 +7,130 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 2. CSS STYLING ---
+# --- 2. CSS STYLING (COMPACT & NO SCROLL) ---
 st.markdown("""
 <style>
-    /* HEADER STYLING */
+    /* 1. MENGHILANGKAN PADDING BAWAAN STREAMLIT AGAR FULL SCREEN */
+    .block-container {
+        padding-top: 1.5rem !important; /* Mengurangi jarak atas drastis */
+        padding-bottom: 1rem !important;
+    }
+    
+    /* 2. HEADER STYLING (LEBIH KECIL & RAPAT) */
     .main-header {
-        font-size: 2.5rem; 
+        font-size: 2rem; /* Ukuran font dikurangi sedikit */
         color: #b30000; 
         text-align: center; 
         font-weight: bold;
+        margin-top: -10px;
         margin-bottom: 0px;
     }
     .sub-header {
-        font-size: 1.2rem; 
+        font-size: 1rem; 
         color: var(--text-color); 
         text-align: center; 
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         opacity: 0.8;
     }
 
-    /* TABS STYLING */
-    /* Memperbesar ukuran font tab */
+    /* 3. TABS STYLING */
     button[data-baseweb="tab"] {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 600;
-        width: 100%; /* Tab memenuhi lebar */
+        padding: 0.5rem 1rem;
     }
-    
-    /* Warna Tab Aktif */
     button[data-baseweb="tab"][aria-selected="true"] {
         color: #b30000 !important;
         border-bottom-color: #b30000 !important;
     }
 
-    /* LOCATION CARD STYLING */
+    /* 4. LOCATION CARD (COMPACT) */
     .location-card {
         background-color: var(--secondary-background-color);
-        border-radius: 15px;
-        padding: 30px;
+        border-radius: 12px;
+        padding: 20px; /* Padding diperkecil */
         border: 1px solid rgba(128, 128, 128, 0.2);
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        max-width: 600px;
-        margin: 20px auto; /* Center alignment */
-        transition: transform 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        max-width: 500px;
+        margin: 10px auto; 
     }
-    .location-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    
+    /* Footer styling */
+    .footer-text {
+        text-align: center; 
+        color: var(--text-color); 
+        opacity: 0.6; 
+        font-size: 0.75em; 
+        margin-top: 20px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. HEADER SECTION (LOGO & JUDUL) ---
-# Menempatkan Logo di Tengah
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    # Menggunakan class 'center' bawaan layout column tidak cukup, jadi kita atur width manual atau use_container_width
-    st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
+# --- 3. HEADER SECTION (LOGO KECIL & DI TENGAH) ---
+
+# Kita gunakan 3 kolom untuk memaksa logo di tengah dengan ukuran pas
+col_left, col_center, col_right = st.columns([4, 2, 4])
+
+with col_center:
+    # width=170 memastikan logo KECIL dan tidak melebar
+    st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", width=170)
 
 st.markdown('<p class="main-header">🎄 Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">Komunitas Kristen & Katolik - Dinas Pendidikan Provinsi DKI Jakarta</p>', unsafe_allow_html=True)
-st.markdown("---")
 
 # --- 4. TABS NAVIGATION ---
 tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
 
 # --- TAB 1: BERANDA (LOKASI) ---
 with tab_beranda:
-    # Karena teks sambutan dihapus, kita tampilkan Info Lokasi di sini agar halaman tidak kosong
-    
-    st.markdown("<h3 style='text-align: center; margin-bottom: 20px;'>📍 Lokasi Kegiatan</h3>", unsafe_allow_html=True)
-    
     MAPS_LINK = "https://www.google.com/maps/search/?api=1&query=Dinas+Pendidikan+Provinsi+DKI+Jakarta"
     
     st.markdown(f"""
     <div class="location-card">
-        <div style="font-size: 3rem; margin-bottom: 15px;">🏢</div>
-        <h3 style="margin: 0; color: var(--text-color);">Gedung Dinas Pendidikan</h3>
-        <p style="font-size: 1.1rem; margin: 5px 0 20px 0; color: var(--text-color); opacity: 0.8;">
+        <div style="font-size: 2.5rem; margin-bottom: 10px;">🏢</div>
+        <h4 style="margin: 0; color: var(--text-color);">Gedung Dinas Pendidikan</h4>
+        <p style="font-size: 0.9rem; margin: 5px 0 15px 0; color: var(--text-color); opacity: 0.8;">
             Provinsi DKI Jakarta
         </p>
         <a href="{MAPS_LINK}" target="_blank" style="
             text-decoration: none;
             background-color: #b30000;
             color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 1rem;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 0.9rem;
             font-weight: bold;
             display: inline-block;
             transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(179, 0, 0, 0.3);
         ">
-            🗺️ Buka Peta Google Maps
+            🗺️ Buka Peta
         </a>
     </div>
     """, unsafe_allow_html=True)
 
 # --- TAB 2: MEDIA SOSIAL ---
 with tab_medsos:
-    st.markdown("<h3 style='text-align: center; margin-bottom: 30px;'>Ikuti Kanal Resmi Kami</h3>", unsafe_allow_html=True)
-
     def social_card(platform_name, handle, link, icon_url, color_stripe):
         with st.container(border=True):
-            c1, c2 = st.columns([1, 4])
+            c1, c2 = st.columns([1, 3]) # Kolom icon lebih kecil
             with c1:
                 st.image(icon_url, use_container_width=True)
             with c2:
-                st.subheader(platform_name)
-                st.markdown(f"**{handle}**")
-                st.link_button(f"👉 Buka {platform_name}", link, use_container_width=True)
+                st.markdown(f"**{platform_name}**")
+                st.caption(handle)
+                st.link_button("Buka", link, use_container_width=True)
 
-    # Grid Layout untuk Kartu Media Sosial
+    # Grid Layout (2 Baris, 2 Kolom)
     col1, col2 = st.columns(2)
     
     with col1:
         social_card("Instagram", "@disdikdki_kriskath", "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", "#E1306C")
-        st.write("") # Spacer
-        social_card("YouTube", "Komunitas Kristen Disdik DKI", "https://www.youtube.com/@kristen_katolik_disdik_dki", "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", "#FF0000")
+        social_card("YouTube", "Komunitas Kristen Disdik", "https://www.youtube.com/@kristen_katolik_disdik_dki", "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", "#FF0000")
 
     with col2:
         social_card("TikTok", "@disdik_kristen_katolik", "https://www.tiktok.com/@disdik_kristen_katolik", "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png", "#000000")
-        st.write("") # Spacer
-        social_card("Facebook", "Persekutuan Doa Disdik DKI", "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png", "#1877F2")
+        social_card("Facebook", "Persekutuan Doa Disdik", "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png", "#1877F2")
 
-# --- FOOTER ---
-st.markdown("---")
-st.markdown("<div style='text-align: center; color: var(--text-color); opacity: 0.7; font-size: 0.8em; margin-top: 20px;'>Dibuat oleh Tim Multimedia - Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
+# --- FOOTER (MINIMALIS) ---
+st.markdown('<p class="footer-text">Tim Multimedia - Komunitas Kristen & Katolik Disdik DKI Jakarta</p>', unsafe_allow_html=True)
