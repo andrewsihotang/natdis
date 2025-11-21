@@ -96,7 +96,7 @@ def header():
 # --- 5. SIDEBAR NAVIGATION ---
 with st.sidebar:
     # Updated Logo (Using 'raw' link to ensure image loads)
-    st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
+    st.image("https://github.com/andrewsihotang/natdis/blob/main/logo_komunitas.png", use_container_width=True)
     
     st.header("Menu Navigasi")
     
@@ -246,5 +246,6 @@ elif selected_page == "Upload Dokumentasi":
 # --- FOOTER ---
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: grey; font-size: 0.8em;'>Dibuat oleh Tim Multimedia - Natal Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
+
 
 
