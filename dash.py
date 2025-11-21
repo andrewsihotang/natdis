@@ -7,11 +7,23 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 2. CSS STYLING (FIXED TEXT COLOR ON TABS) ---
+# --- 2. CSS STYLING (ANTI-CURSOR TEXT & FORCE LIGHT MODE) ---
 st.markdown("""
 <style>
-    /* --- 1. FORCE LIGHT MODE (MEMAKSA TAMPILAN PUTIH) --- */
+    /* --- 1. FIX KURSOR KEDAP-KEDIP (SOLUSI UTAMA) --- */
     
+    /* Terapkan ke seluruh aplikasi */
+    [data-testid="stAppViewContainer"], body, html {
+        caret-color: transparent !important; /* Hilangkan garis kedap-kedip */
+        cursor: default !important; /* Kursor jadi panah, bukan bentuk 'I' text-select */
+    }
+    
+    /* Kembalikan kursor jari (pointer) hanya untuk benda yang bisa diklik */
+    a, button, [role="button"], .stTabs [data-baseweb="tab"] {
+        cursor: pointer !important;
+    }
+
+    /* --- 2. FORCE LIGHT MODE --- */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
     }
@@ -19,13 +31,12 @@ st.markdown("""
         background-color: rgba(255, 255, 255, 0.0) !important;
     }
     
-    /* GLOBAL TEXT COLOR: Hitam (Default) */
-    /* Kita gunakan selector umum, tapi nanti kita override khusus untuk Tab Aktif */
+    /* GLOBAL TEXT COLOR: Hitam */
     body, .stMarkdown, .stText, h1, h2, h3, h4, h5, h6, p, li, div {
         color: #333333 !important;
     }
 
-    /* --- 2. HEADER & GENERAL LAYOUT --- */
+    /* --- 3. HEADER & LAYOUT --- */
     .block-container {
         padding-top: 3.5rem !important;
         padding-bottom: 2rem !important;
@@ -48,8 +59,7 @@ st.markdown("""
         font-style: italic;
     }
 
-    /* --- 3. TABS STYLING (FIXED COLOR ISSUE) --- */
-    
+    /* --- 4. TABS STYLING (FIXED COLOR) --- */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
         background-color: transparent;
@@ -60,7 +70,7 @@ st.markdown("""
         border-bottom: 1px solid #eeeeee;
     }
 
-    /* Tombol Tab (Pasif / Tidak Dipilih) */
+    /* Tab Pasif */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         white-space: pre-wrap;
@@ -71,8 +81,6 @@ st.markdown("""
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         padding: 0 25px;
     }
-    
-    /* Memastikan teks tab pasif berwarna abu gelap */
     .stTabs [data-baseweb="tab"] p, 
     .stTabs [data-baseweb="tab"] div {
         color: #555555 !important;
@@ -80,7 +88,7 @@ st.markdown("""
         font-size: 1rem;
     }
 
-    /* Tombol Tab Hover */
+    /* Tab Hover */
     .stTabs [data-baseweb="tab"]:hover {
         background-color: #fff0f0 !important;
         border-color: #ffcccc;
@@ -88,34 +96,27 @@ st.markdown("""
     }
     .stTabs [data-baseweb="tab"]:hover p,
     .stTabs [data-baseweb="tab"]:hover div {
-        color: #b30000 !important; /* Teks jadi merah saat hover */
+        color: #b30000 !important;
     }
 
-    /* --- PERBAIKAN UTAMA DI SINI (TAB AKTIF) --- */
-    
-    /* Background Merah untuk Tab Aktif */
+    /* Tab Aktif */
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
         background-color: #b30000 !important;
         box-shadow: 0 4px 10px rgba(179, 0, 0, 0.3);
         transform: scale(1.05);
         border: none;
     }
-
-    /* MEMAKSA TEKS DI DALAM TAB AKTIF MENJADI PUTIH */
-    /* Kita targetkan elemen p dan div di dalam tab yang terpilih */
     .stTabs [data-baseweb="tab"][aria-selected="true"] p,
     .stTabs [data-baseweb="tab"][aria-selected="true"] div {
-        color: #ffffff !important; /* INI KUNCINYA: override global color */
+        color: #ffffff !important; /* Teks Putih */
         opacity: 1 !important;
     }
-
-    /* Hilangkan highlight bawaan */
+    
     .stTabs [data-baseweb="tab-highlight"] {
         background-color: transparent !important; 
     }
 
-    /* --- 4. CONTENT & CARD STYLING --- */
-    
+    /* --- 5. CONTENT & SOCIAL CARDS --- */
     .welcome-text {
         text-align: justify;
         font-size: 1.05rem;
@@ -127,7 +128,6 @@ st.markdown("""
         border-radius: 10px;
     }
 
-    /* --- 5. SOCIAL MEDIA CARD --- */
     .social-card {
         background-color: #ffffff;
         border: 1px solid #e0e0e0;
@@ -142,6 +142,7 @@ st.markdown("""
         text-decoration: none;
         position: relative;
         overflow: hidden;
+        cursor: pointer !important; /* Pastikan kartu bisa diklik */
     }
     .social-card:hover {
         transform: translateY(-5px);
@@ -178,6 +179,7 @@ st.markdown("""
         color: #555 !important;
         font-weight: 600;
         transition: background 0.3s;
+        cursor: pointer !important;
     }
     .social-card:hover .fake-btn {
         background-color: #b30000;
