@@ -41,27 +41,22 @@ st.markdown("""
         padding-top: 3.5rem !important;
         padding-bottom: 2rem !important;
     }
-    
-    /* JUDUL UTAMA (BAGIAN ATAS) */
     .main-header {
-        font-size: 3rem; /* DIPERBESAR */
-        color: #b30000 !important; /* MERAH */
+        font-size: 2.3rem;
+        color: #b30000 !important;
         text-align: center; 
         font-weight: 800;
         margin-top: 0px;
-        margin-bottom: 0px; /* Jarak dirapatkan */
+        margin-bottom: 5px;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        line-height: 1.2;
     }
-    
-    /* SUB-JUDUL (BAGIAN BAWAH) */
     .sub-header {
-        font-size: 1.8rem; /* DIPERBESAR */
-        color: #b30000 !important; /* DISAMAKAN WARNANYA (MERAH) */
+        font-size: 1.3rem; /* Sedikit diperbesar agar nama Dinas terbaca jelas */
+        color: #555555 !important;
         text-align: center; 
         margin-bottom: 2rem;
-        font-weight: 700; /* DITEBALKAN */
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        opacity: 0.9;
+        font-weight: 600; /* Sedikit lebih tebal */
     }
 
     /* --- 4. TABS STYLING (FIXED COLOR) --- */
@@ -205,6 +200,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 3. HEADER SECTION (DIPERBARUI) ---
+# Judul dipecah agar terlihat proporsional (Nama Komunitas di atas, Nama Dinas di bawah)
 st.markdown('<p class="main-header">Komunitas Kristen & Katolik</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
 
