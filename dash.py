@@ -175,7 +175,7 @@ elif selected_page == "Media Sosial":
         social_card(
             "Instagram", 
             "@disdikdki_kriskath", 
-            "Info terbaru, poster acara, dan update harian via story.", 
+            "Akun Resmi Instagram Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", 
             "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png",
             "#E1306C"
@@ -186,7 +186,7 @@ elif selected_page == "Media Sosial":
         social_card(
             "TikTok", 
             "@disdik_kristen_katolik", 
-            "Keseruan di balik layar (BTS) dan konten kreatif panitia.", 
+            "Akun Resmi Tiktok Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", 
             "https://www.tiktok.com/@disdik_kristen_katolik", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png",
             "#000000"
@@ -197,7 +197,7 @@ elif selected_page == "Media Sosial":
         social_card(
             "YouTube", 
             "Komunitas Kristen Disdik DKI", 
-            "Live streaming Ibadah Natal dan dokumentasi video high-res.", 
+            "Akun Resmi Youtube Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", 
             "https://www.youtube.com/@kristen_katolik_disdik_dki", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png",
             "#FF0000"
@@ -208,7 +208,7 @@ elif selected_page == "Media Sosial":
         social_card(
             "Facebook", 
             "Persekutuan Doa Disdik DKI", 
-            "Pengumuman komunitas, album foto, dan sharing keluarga.", 
+            "Akun Resmi Facebook Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta", 
             "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png",
             "#1877F2"
@@ -248,3 +248,4 @@ elif selected_page == "Upload Dokumentasi":
 # --- FOOTER ---
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: grey; font-size: 0.8em;'>Dibuat oleh Tim Multimedia - Natal Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
+
