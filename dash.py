@@ -14,7 +14,7 @@ if 'page' not in st.session_state:
 def navigate_to(page_name):
     st.session_state.page = page_name
 
-# --- 3. CSS STYLING (FIXED FULL WIDTH RESPONSIVE) ---
+# --- 3. CSS STYLING (FIXED DYNAMIC WIDTH) ---
 st.markdown("""
 <style>
     /* HEADER STYLING */
@@ -32,60 +32,72 @@ st.markdown("""
         margin-bottom: 2rem;
     }
 
-    /* --- NAVIGATION TABS STYLING (FORCE FULL WIDTH) --- */
+    /* --- PERBAIKAN CSS SIDEBAR (FULL WIDTH) --- */
     
-    /* 1. Hilangkan lingkaran radio button */
-    [data-testid="stSidebar"] [role="radiogroup"] > label > div:first-child { 
-        display: none !important; 
-    }
-    
-    /* 2. Styling Container Utama Tombol */
-    [data-testid="stSidebar"] [role="radiogroup"] {
+    /* 1. Target Widget Radio Utama di Sidebar */
+    [data-testid="stSidebar"] [data-testid="stRadio"] {
         width: 100% !important;
     }
 
-    /* 3. Styling Kotak Tombol agar Dinamis */
-    [data-testid="stSidebar"] [role="radiogroup"] > label {
+    /* 2. Target Group Container */
+    [data-testid="stSidebar"] [role="radiogroup"] {
+        width: 100% !important;
         display: flex !important;
-        justify-content: center !important; /* Teks selalu di tengah */
-        align-items: center !important;
+        flex-direction: column !important;
+        gap: 10px !important; /* Jarak antar tombol */
+    }
+
+    /* 3. Sembunyikan bulatan radio button */
+    [data-testid="stSidebar"] [role="radiogroup"] label > div:first-child {
+        display: none !important;
+    }
+
+    /* 4. Styling Kotak Tombol (Label) - INI KUNCINYA */
+    [data-testid="stSidebar"] [role="radiogroup"] label {
+        width: 100% !important;      /* Memaksa lebar 100% dari sidebar */
+        display: flex !important;    /* Flexbox agar isi bisa diatur */
+        justify-content: center !important; /* Teks di tengah horizontal */
+        align-items: center !important;     /* Teks di tengah vertikal */
         
-        width: 100% !important;      /* Paksa lebar penuh */
-        margin-right: 0 !important;  /* Hapus margin kanan default */
-        padding: 12px 0px !important; /* Padding atas bawah */
+        padding: 15px 0px !important; /* Padding atas bawah */
+        margin: 0px !important;
         
         background-color: var(--background-color); 
         color: var(--text-color);
-        border-radius: 8px;
-        margin-bottom: 8px;
         border: 1px solid rgba(128, 128, 128, 0.2);
+        border-radius: 8px;
         transition: all 0.2s;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        
-        /* Agar teks tidak tumpuk */
-        white-space: nowrap; 
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 
-    /* 4. Hover effect */
-    [data-testid="stSidebar"] [role="radiogroup"] > label:hover {
-        border-color: #b30000;
-        color: #b30000;
+    /* 5. Memastikan teks di dalam label juga mengambil lebar penuh */
+    [data-testid="stSidebar"] [role="radiogroup"] label > div {
+        width: 100% !important;
+        text-align: center !important;
+        line-height: 1.2 !important;
+    }
+
+    /* 6. Hover effect */
+    [data-testid="stSidebar"] [role="radiogroup"] label:hover {
+        border-color: #b30000 !important;
+        color: #b30000 !important;
+        background-color: var(--secondary-background-color) !important;
         cursor: pointer;
-        background-color: var(--secondary-background-color);
     }
 
-    /* 5. Active/Selected State */
-    [data-testid="stSidebar"] [role="radiogroup"] > label[aria-checked="true"] {
+    /* 7. Active/Selected State */
+    [data-testid="stSidebar"] [role="radiogroup"] label[aria-checked="true"] {
         background-color: #b30000 !important;
-        border-color: #b30000;
+        border-color: #b30000 !important;
         color: white !important;
     }
     
-    /* Ensure text inside active tab is white */
-    [data-testid="stSidebar"] [role="radiogroup"] > label[aria-checked="true"] p {
+    /* Warna teks saat aktif */
+    [data-testid="stSidebar"] [role="radiogroup"] label[aria-checked="true"] p {
         color: white !important;
-        font-weight: bold;
+        font-weight: bold !important;
     }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -100,7 +112,7 @@ with st.sidebar:
     # Logo
     st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
     
-    # Menu Navigasi (Tanpa Label Judul)
+    # Menu Navigasi
     selected_page = st.radio(
         "Menu Navigasi", 
         ["Beranda", "Media Sosial"], 
@@ -108,7 +120,7 @@ with st.sidebar:
         label_visibility="collapsed" 
     )
     
-    # Bagian Lokasi sudah DIHAPUS sesuai permintaan.
+    # (Bagian Lokasi sudah dihapus)
 
 # --- PAGE 1: BERANDA ---
 if selected_page == "Beranda":
