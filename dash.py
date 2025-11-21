@@ -7,23 +7,26 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 2. CSS STYLING (ANTI-CURSOR TEXT & FORCE LIGHT MODE) ---
+# --- 2. CSS STYLING (ANTI-CURSOR TEXT & FORCE LIGHT MODE & FIX SCROLLBAR JUMP) ---
 st.markdown("""
 <style>
-    /* --- 1. FIX KURSOR KEDAP-KEDIP (SOLUSI UTAMA) --- */
-    
-    /* Terapkan ke seluruh aplikasi */
+    /* --- 1. FIX LAYOUT SHIFT (Masalah Judul Gerak) --- */
+    /* Memaksa scrollbar selalu muncul agar lebar halaman tidak berubah-ubah */
+    html {
+        overflow-y: scroll !important;
+    }
+
+    /* --- 2. FIX KURSOR KEDAP-KEDIP --- */
     [data-testid="stAppViewContainer"], body, html {
-        caret-color: transparent !important; /* Hilangkan garis kedap-kedip */
-        cursor: default !important; /* Kursor jadi panah, bukan bentuk 'I' text-select */
+        caret-color: transparent !important;
+        cursor: default !important;
     }
     
-    /* Kembalikan kursor jari (pointer) hanya untuk benda yang bisa diklik */
     a, button, [role="button"], .stTabs [data-baseweb="tab"] {
         cursor: pointer !important;
     }
 
-    /* --- 2. FORCE LIGHT MODE --- */
+    /* --- 3. FORCE LIGHT MODE & COLORS --- */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
     }
@@ -31,40 +34,44 @@ st.markdown("""
         background-color: rgba(255, 255, 255, 0.0) !important;
     }
     
-    /* GLOBAL TEXT COLOR: Hitam */
     body, .stMarkdown, .stText, h1, h2, h3, h4, h5, h6, p, li, div {
         color: #333333 !important;
     }
 
-    /* --- 3. HEADER & LAYOUT --- */
+    /* --- 4. HEADER & LAYOUT --- */
     .block-container {
         padding-top: 3.5rem !important;
         padding-bottom: 2rem !important;
+        max-width: 1200px; /* Opsional: Membatasi lebar agar tetap rapi di layar ultra-wide */
     }
     
-    /* JUDUL UTAMA (BAGIAN ATAS) */
+    /* JUDUL UTAMA (BAGIAN ATAS) - Fixed Margins */
     .main-header {
-        font-size: 3rem; /* DIPERBESAR */
-        color: #b30000 !important; /* MERAH */
+        font-size: 3rem; 
+        color: #b30000 !important; 
         text-align: center; 
         font-weight: 800;
-        margin-top: 0px;
-        margin-bottom: 0px; /* Jarak dirapatkan */
+        margin-top: 0px !important;    /* Kunci margin */
+        margin-bottom: 0px !important; /* Kunci margin */
+        padding: 0px !important;       /* Kunci padding */
         text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         line-height: 1.2;
+        display: block; /* Pastikan dia block element */
     }
     
-    /* SUB-JUDUL (BAGIAN BAWAH) */
+    /* SUB-JUDUL (BAGIAN BAWAH) - Fixed Margins */
     .sub-header {
-        font-size: 1.8rem; /* DIPERBESAR */
-        color: #b30000 !important; /* DISAMAKAN WARNANYA (MERAH) */
+        font-size: 1.8rem; 
+        color: #b30000 !important; 
         text-align: center; 
-        margin-bottom: 2rem;
-        font-weight: 700; /* DITEBALKAN */
+        margin-top: 0px !important;
+        margin-bottom: 2rem !important;
+        font-weight: 700; 
         text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        display: block;
     }
 
-    /* --- 4. TABS STYLING (FIXED COLOR) --- */
+    /* --- 5. TABS STYLING --- */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
         background-color: transparent;
@@ -75,7 +82,6 @@ st.markdown("""
         border-bottom: 1px solid #eeeeee;
     }
 
-    /* Tab Pasif */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         white-space: pre-wrap;
@@ -93,7 +99,6 @@ st.markdown("""
         font-size: 1rem;
     }
 
-    /* Tab Hover */
     .stTabs [data-baseweb="tab"]:hover {
         background-color: #fff0f0 !important;
         border-color: #ffcccc;
@@ -104,7 +109,6 @@ st.markdown("""
         color: #b30000 !important;
     }
 
-    /* Tab Aktif */
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
         background-color: #b30000 !important;
         box-shadow: 0 4px 10px rgba(179, 0, 0, 0.3);
@@ -113,7 +117,7 @@ st.markdown("""
     }
     .stTabs [data-baseweb="tab"][aria-selected="true"] p,
     .stTabs [data-baseweb="tab"][aria-selected="true"] div {
-        color: #ffffff !important; /* Teks Putih */
+        color: #ffffff !important;
         opacity: 1 !important;
     }
     
@@ -121,7 +125,7 @@ st.markdown("""
         background-color: transparent !important; 
     }
 
-    /* --- 5. CONTENT & SOCIAL CARDS --- */
+    /* --- 6. CONTENT & SOCIAL CARDS --- */
     .welcome-text {
         text-align: justify;
         font-size: 1.05rem;
@@ -147,7 +151,7 @@ st.markdown("""
         text-decoration: none;
         position: relative;
         overflow: hidden;
-        cursor: pointer !important; /* Pastikan kartu bisa diklik */
+        cursor: pointer !important;
     }
     .social-card:hover {
         transform: translateY(-5px);
@@ -204,9 +208,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. HEADER SECTION (DIPERBARUI) ---
-st.markdown('<p class="main-header">Komunitas Kristen & Katolik</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
+# --- 3. HEADER SECTION (DIPERBARUI DENGAN DIV WRAPPER) ---
+# Menggunakan Container div manual untuk memastikan struktur HTML tidak goyang
+st.markdown("""
+    <div style="text-align: center;">
+        <p class="main-header">Komunitas Kristen & Katolik</p>
+        <p class="sub-header">Dinas Pendidikan DKI Jakarta</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- 4. TABS NAVIGATION ---
 tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
