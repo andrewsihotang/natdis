@@ -8,6 +8,7 @@ from googleapiclient.http import MediaIoBaseUpload
 PARENT_FOLDER_ID = "1nxAejoI_zoYfLhav6xIevj_tzdKDxx4X"
 
 def upload_to_drive(file_obj, file_name, mime_type):
+    def upload_to_drive(file_obj, file_name, mime_type):
     """Fungsi untuk mengupload file ke Google Drive via Service Account"""
     try:
         # Cek apakah Secrets sudah ada
@@ -22,17 +23,18 @@ def upload_to_drive(file_obj, file_name, mime_type):
             scopes=['https://www.googleapis.com/auth/drive']
         )
         
-        service = build('drive', 'v3', credentials=creds)
+        # Gunakan cache_discovery=False untuk menghindari error di beberapa environment
+        service = build('drive', 'v3', credentials=creds, cache_discovery=False)
 
         file_metadata = {
             'name': file_name,
             'parents': [PARENT_FOLDER_ID]
         }
         
-        media = MediaIoBaseUpload(file_obj, mimetype=mime_type, resumable=True)
+        # --- PERUBAHAN PENTING DI SINI (resumable=False) ---
+        # Kita matikan resumable upload agar file langsung masuk ke storage pemilik folder
+        media = MediaIoBaseUpload(file_obj, mimetype=mime_type, resumable=False)
         
-        # --- PROSES UPLOAD ---
-        # Ditambahkan parameter 'supportsAllDrives=True' untuk kompatibilitas lebih baik
         file = service.files().create(
             body=file_metadata,
             media_body=media,
@@ -249,3 +251,4 @@ elif selected_page == "Upload Dokumentasi":
 # --- FOOTER ---
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: var(--text-color); opacity: 0.7; font-size: 0.8em;'>Dibuat oleh Tim Multimedia - Natal Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
+
