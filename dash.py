@@ -7,14 +7,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 2. SESSION STATE MANAGEMENT ---
-if 'page' not in st.session_state:
-    st.session_state.page = "Beranda"
-
-def navigate_to(page_name):
-    st.session_state.page = page_name
-
-# --- 3. CSS STYLING (FIXED DYNAMIC WIDTH) ---
+# --- 2. CSS STYLING ---
 st.markdown("""
 <style>
     /* HEADER STYLING */
@@ -23,161 +16,122 @@ st.markdown("""
         color: #b30000; 
         text-align: center; 
         font-weight: bold;
-        margin-top: -20px;
+        margin-bottom: 0px;
     }
     .sub-header {
         font-size: 1.2rem; 
         color: var(--text-color); 
         text-align: center; 
         margin-bottom: 2rem;
+        opacity: 0.8;
     }
 
-    /* --- PERBAIKAN CSS SIDEBAR (FULL WIDTH) --- */
+    /* TABS STYLING */
+    /* Memperbesar ukuran font tab */
+    button[data-baseweb="tab"] {
+        font-size: 1.2rem;
+        font-weight: 600;
+        width: 100%; /* Tab memenuhi lebar */
+    }
     
-    /* 1. Target Widget Radio Utama di Sidebar */
-    [data-testid="stSidebar"] [data-testid="stRadio"] {
-        width: 100% !important;
-    }
-
-    /* 2. Target Group Container */
-    [data-testid="stSidebar"] [role="radiogroup"] {
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 10px !important; /* Jarak antar tombol */
-    }
-
-    /* 3. Sembunyikan bulatan radio button */
-    [data-testid="stSidebar"] [role="radiogroup"] label > div:first-child {
-        display: none !important;
-    }
-
-    /* 4. Styling Kotak Tombol (Label) - INI KUNCINYA */
-    [data-testid="stSidebar"] [role="radiogroup"] label {
-        width: 100% !important;      /* Memaksa lebar 100% dari sidebar */
-        display: flex !important;    /* Flexbox agar isi bisa diatur */
-        justify-content: center !important; /* Teks di tengah horizontal */
-        align-items: center !important;     /* Teks di tengah vertikal */
-        
-        padding: 15px 0px !important; /* Padding atas bawah */
-        margin: 0px !important;
-        
-        background-color: var(--background-color); 
-        color: var(--text-color);
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        border-radius: 8px;
-        transition: all 0.2s;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-
-    /* 5. Memastikan teks di dalam label juga mengambil lebar penuh */
-    [data-testid="stSidebar"] [role="radiogroup"] label > div {
-        width: 100% !important;
-        text-align: center !important;
-        line-height: 1.2 !important;
-    }
-
-    /* 6. Hover effect */
-    [data-testid="stSidebar"] [role="radiogroup"] label:hover {
-        border-color: #b30000 !important;
+    /* Warna Tab Aktif */
+    button[data-baseweb="tab"][aria-selected="true"] {
         color: #b30000 !important;
-        background-color: var(--secondary-background-color) !important;
-        cursor: pointer;
+        border-bottom-color: #b30000 !important;
     }
 
-    /* 7. Active/Selected State */
-    [data-testid="stSidebar"] [role="radiogroup"] label[aria-checked="true"] {
-        background-color: #b30000 !important;
-        border-color: #b30000 !important;
-        color: white !important;
+    /* LOCATION CARD STYLING */
+    .location-card {
+        background-color: var(--secondary-background-color);
+        border-radius: 15px;
+        padding: 30px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        max-width: 600px;
+        margin: 20px auto; /* Center alignment */
+        transition: transform 0.3s ease;
     }
-    
-    /* Warna teks saat aktif */
-    [data-testid="stSidebar"] [role="radiogroup"] label[aria-checked="true"] p {
-        color: white !important;
-        font-weight: bold !important;
+    .location-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
     }
-
 </style>
 """, unsafe_allow_html=True)
 
-# --- 4. HEADER FUNCTION ---
-def header():
-    st.markdown('<p class="main-header">🎄 Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Komunitas Kristen & Katolik - Dinas Pendidikan Provinsi DKI Jakarta</p>', unsafe_allow_html=True)
-    st.markdown("---")
-
-# --- 5. SIDEBAR NAVIGATION ---
-with st.sidebar:
-    # Logo
+# --- 3. HEADER SECTION (LOGO & JUDUL) ---
+# Menempatkan Logo di Tengah
+col1, col2, col3 = st.columns([1, 1, 1])
+with col2:
+    # Menggunakan class 'center' bawaan layout column tidak cukup, jadi kita atur width manual atau use_container_width
     st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
-    
-    # Menu Navigasi
-    selected_page = st.radio(
-        "Menu Navigasi", 
-        ["Beranda", "Media Sosial"], 
-        key="page",
-        label_visibility="collapsed" 
-    )
-    
-    # (Bagian Lokasi sudah dihapus)
 
-# --- PAGE 1: BERANDA ---
-if selected_page == "Beranda":
-    header()
-    
-    st.subheader("👋 Selamat Datang!")
-    st.info("""
-    **Syalom!** Selamat datang di Portal Informasi Natal Dinas Pendidikan DKI Jakarta.
-    
-    Website ini didedikasikan untuk memberikan informasi terkini mengenai perayaan Natal kita, 
-    mulai dari jadwal ibadah hingga tautan media sosial resmi komunitas.
-    Mari kita rayakan sukacita Natal dengan semangat kebersamaan dan pelayanan.
-    """)
+st.markdown('<p class="main-header">🎄 Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Komunitas Kristen & Katolik - Dinas Pendidikan Provinsi DKI Jakarta</p>', unsafe_allow_html=True)
+st.markdown("---")
 
-    st.markdown("### 📌 Menu Cepat")
+# --- 4. TABS NAVIGATION ---
+tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
+
+# --- TAB 1: BERANDA (LOKASI) ---
+with tab_beranda:
+    # Karena teks sambutan dihapus, kita tampilkan Info Lokasi di sini agar halaman tidak kosong
     
-    with st.container(border=True):
-        c1, c2 = st.columns([1, 3])
-        with c1:
-            st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", width=100)
-        with c2:
-            st.markdown("### 🌐 Media Sosial")
-            st.write("Ikuti akun resmi Instagram, TikTok, YouTube, dan Facebook kami untuk update terbaru.")
-            st.button("👉 Buka Media Sosial", on_click=navigate_to, args=("Media Sosial",), use_container_width=True)
+    st.markdown("<h3 style='text-align: center; margin-bottom: 20px;'>📍 Lokasi Kegiatan</h3>", unsafe_allow_html=True)
+    
+    MAPS_LINK = "https://www.google.com/maps/search/?api=1&query=Dinas+Pendidikan+Provinsi+DKI+Jakarta"
+    
+    st.markdown(f"""
+    <div class="location-card">
+        <div style="font-size: 3rem; margin-bottom: 15px;">🏢</div>
+        <h3 style="margin: 0; color: var(--text-color);">Gedung Dinas Pendidikan</h3>
+        <p style="font-size: 1.1rem; margin: 5px 0 20px 0; color: var(--text-color); opacity: 0.8;">
+            Provinsi DKI Jakarta
+        </p>
+        <a href="{MAPS_LINK}" target="_blank" style="
+            text-decoration: none;
+            background-color: #b30000;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(179, 0, 0, 0.3);
+        ">
+            🗺️ Buka Peta Google Maps
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
 
-# --- PAGE 2: MEDIA SOSIAL ---
-elif selected_page == "Media Sosial":
-    st.title("🌐 Media Sosial")
-    st.write("Terhubunglah dengan kanal resmi Komunitas Kristen & Katolik Disdik DKI Jakarta.")
-    st.markdown("---")
+# --- TAB 2: MEDIA SOSIAL ---
+with tab_medsos:
+    st.markdown("<h3 style='text-align: center; margin-bottom: 30px;'>Ikuti Kanal Resmi Kami</h3>", unsafe_allow_html=True)
 
-    def social_card(platform_name, handle, desc, link, icon_url, color_stripe):
+    def social_card(platform_name, handle, link, icon_url, color_stripe):
         with st.container(border=True):
             c1, c2 = st.columns([1, 4])
             with c1:
                 st.image(icon_url, use_container_width=True)
             with c2:
                 st.subheader(platform_name)
-                st.markdown(f"**Akun:** `{handle}`")
-                st.caption(desc)
-                st.link_button(f"👉 Ikuti di {platform_name}", link, use_container_width=True)
+                st.markdown(f"**{handle}**")
+                st.link_button(f"👉 Buka {platform_name}", link, use_container_width=True)
 
-    row1_col1, row1_col2 = st.columns(2)
-    with row1_col1:
-        social_card("Instagram", "@disdikdki_kriskath", "Akun Instagram Resmi Komunitas.", "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", "#E1306C")
-    with row1_col2:
-        social_card("TikTok", "@disdik_kristen_katolik", "Akun Tiktok Resmi Komunitas.", "https://www.tiktok.com/@disdik_kristen_katolik", "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png", "#000000")
-        
-    row2_col1, row2_col2 = st.columns(2)
-    with row2_col1:
-        social_card("YouTube", "Komunitas Kristen Disdik DKI", "Akun Youtube Resmi Komunitas.", "https://www.youtube.com/@kristen_katolik_disdik_dki", "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", "#FF0000")
-    with row2_col2:
-        social_card("Facebook", "Persekutuan Doa Disdik DKI", "Akun Facebook Resmi Komunitas.", "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png", "#1877F2")
-        
-    st.markdown("---")
-    st.success("💡 **Tips:** Klik tombol di atas untuk langsung membuka aplikasi.")
+    # Grid Layout untuk Kartu Media Sosial
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        social_card("Instagram", "@disdikdki_kriskath", "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", "#E1306C")
+        st.write("") # Spacer
+        social_card("YouTube", "Komunitas Kristen Disdik DKI", "https://www.youtube.com/@kristen_katolik_disdik_dki", "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", "#FF0000")
+
+    with col2:
+        social_card("TikTok", "@disdik_kristen_katolik", "https://www.tiktok.com/@disdik_kristen_katolik", "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png", "#000000")
+        st.write("") # Spacer
+        social_card("Facebook", "Persekutuan Doa Disdik DKI", "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png", "#1877F2")
 
 # --- FOOTER ---
 st.markdown("---")
-st.markdown("<div style='text-align: center; color: var(--text-color); opacity: 0.7; font-size: 0.8em;'>Dibuat oleh Tim Multimedia - Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; color: var(--text-color); opacity: 0.7; font-size: 0.8em; margin-top: 20px;'>Dibuat oleh Tim Multimedia - Komunitas Kristen dan Katolik Dinas Pendidikan DKI Jakarta</div>", unsafe_allow_html=True)
