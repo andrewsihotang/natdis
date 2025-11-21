@@ -1,5 +1,47 @@
 import streamlit as st
-import os
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+
+# --- KONFIGURASI GOOGLE DRIVE ---
+# ID Folder diambil dari link yang Anda berikan
+PARENT_FOLDER_ID = "1nxAejoI_zoYfLhav6xIevj_tzdKDxx4X"
+
+def upload_to_drive(file_obj, file_name, mime_type):
+    """Fungsi untuk mengupload file ke Google Drive via Service Account"""
+    try:
+        # Mengambil kredensial dari st.secrets (Setting di Dashboard Streamlit Cloud)
+        if "gcp_service_account" not in st.secrets:
+            st.error("Secrets belum disetting! Masukkan kredensial JSON di Dashboard Streamlit.")
+            return None, None
+
+        creds_dict = st.secrets["gcp_service_account"]
+        creds = service_account.Credentials.from_service_account_info(
+            creds_dict, 
+            scopes=['https://www.googleapis.com/auth/drive']
+        )
+        
+        service = build('drive', 'v3', credentials=creds)
+
+        file_metadata = {
+            'name': file_name,
+            'parents': [PARENT_FOLDER_ID]
+        }
+        
+        # Upload file
+        media = MediaIoBaseUpload(file_obj, mimetype=mime_type, resumable=True)
+        
+        file = service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id, webViewLink'
+        ).execute()
+        
+        return file.get('id'), file.get('webViewLink')
+        
+    except Exception as e:
+        st.error(f"Terjadi kesalahan koneksi ke Google Drive: {e}")
+        return None, None
 
 # --- 1. PAGE CONFIGURATION ---
 st.set_page_config(
@@ -21,51 +63,37 @@ st.markdown("""
     /* HEADER STYLING */
     .main-header {
         font-size: 2.5rem; 
-        color: #b30000; /* Tetap Merah agar kontras di hitam/putih */
+        color: #b30000; 
         text-align: center; 
         font-weight: bold;
         margin-top: -20px;
     }
     .sub-header {
         font-size: 1.2rem; 
-        color: var(--text-color); /* Mengikuti warna teks tema (Hitam/Putih) */
+        color: var(--text-color); 
         text-align: center; 
         margin-bottom: 2rem;
     }
 
     /* CURSOR FIXES */
-    [data-testid="stAppViewContainer"] {
-        caret-color: transparent;
-    }
-    input, textarea {
-        caret-color: auto !important;
-    }
+    [data-testid="stAppViewContainer"] { caret-color: transparent; }
+    input, textarea { caret-color: auto !important; }
 
-    /* NAVIGATION TABS STYLING (Responsive Theme) */
+    /* NAVIGATION TABS STYLING */
+    [data-testid="stSidebar"] [role="radiogroup"] > label > div:first-child { display: none; }
     
-    /* 1. Hide the radio circle */
-    [data-testid="stSidebar"] [role="radiogroup"] > label > div:first-child {
-        display: none;
-    }
-    
-    /* 2. Style the rectangle box */
     [data-testid="stSidebar"] [role="radiogroup"] > label {
         padding: 12px 20px;
-        /* Gunakan variabel background tema utama agar kontras dengan sidebar */
         background-color: var(--background-color); 
         color: var(--text-color);
         border-radius: 8px;
         margin-bottom: 8px;
-        border: 1px solid rgba(128, 128, 128, 0.2); /* Border transparan halus */
+        border: 1px solid rgba(128, 128, 128, 0.2);
         transition: all 0.3s ease;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        
-        width: 100%;        
-        display: block;     
-        text-align: center; 
+        width: 100%; display: block; text-align: center; 
     }
 
-    /* 3. Hover effect */
     [data-testid="stSidebar"] [role="radiogroup"] > label:hover {
         border-color: #b30000;
         color: #b30000;
@@ -73,19 +101,16 @@ st.markdown("""
         background-color: var(--secondary-background-color);
     }
 
-    /* 4. Active/Selected State */
     [data-testid="stSidebar"] [role="radiogroup"] > label[aria-checked="true"] {
         background-color: #b30000 !important;
         border-color: #b30000;
         color: white !important;
     }
     
-    /* Ensure text inside active tab is white */
     [data-testid="stSidebar"] [role="radiogroup"] > label[aria-checked="true"] p {
         color: white !important;
         font-weight: bold;
     }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -97,10 +122,8 @@ def header():
 
 # --- 5. SIDEBAR NAVIGATION ---
 with st.sidebar:
-    # Logo
     st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
     
-    # Navigasi (Label disembunyikan)
     selected_page = st.radio(
         "Menu Navigasi", 
         ["Beranda", "Media Sosial", "Upload Dokumentasi"],
@@ -110,7 +133,6 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Lokasi (Updated agar teks mengikuti warna tema)
     st.markdown("### 📍 Lokasi")
     st.markdown(
         """
@@ -168,14 +190,12 @@ elif selected_page == "Media Sosial":
                 st.link_button(f"👉 Ikuti di {platform_name}", link, use_container_width=True)
 
     row1_col1, row1_col2 = st.columns(2)
-    
     with row1_col1:
         social_card("Instagram", "@disdikdki_kriskath", "Info terbaru via story.", "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png", "#E1306C")
     with row1_col2:
         social_card("TikTok", "@disdik_kristen_katolik", "BTS dan konten kreatif.", "https://www.tiktok.com/@disdik_kristen_katolik", "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png", "#000000")
         
     row2_col1, row2_col2 = st.columns(2)
-    
     with row2_col1:
         social_card("YouTube", "Komunitas Kristen Disdik DKI", "Live streaming Ibadah.", "https://www.youtube.com/@kristen_katolik_disdik_dki", "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png", "#FF0000")
     with row2_col2:
@@ -184,16 +204,13 @@ elif selected_page == "Media Sosial":
     st.markdown("---")
     st.success("💡 **Tips:** Klik tombol di atas untuk langsung membuka aplikasi.")
 
-# --- PAGE 3: UPLOAD DOKUMENTASI (SIMULASI PENYIMPANAN LOKAL) ---
-# Catatan: Untuk Google Drive, Anda perlu memasukkan kode API seperti diskusi sebelumnya.
-# Kode di bawah ini menggunakan simulasi 'os' (Lokal) agar tidak error jika belum setup API.
-
+# --- PAGE 3: UPLOAD DOKUMENTASI (INTEGRASI GOOGLE DRIVE) ---
 elif selected_page == "Upload Dokumentasi":
     st.title("📂 Upload Dokumentasi")
     st.write("Halaman ini untuk Panitia atau Anggota mengumpulkan dokumentasi kegiatan.")
 
     with st.container(border=True):
-        st.info("Silakan upload foto/video rapat, latihan paduan suara, atau survei lokasi.")
+        st.info("Silakan upload foto/video. File akan otomatis tersimpan di Google Drive Panitia.")
         
         with st.form("upload_form"):
             col_a, col_b = st.columns(2)
@@ -206,15 +223,27 @@ elif selected_page == "Upload Dokumentasi":
             
             notes = st.text_area("Catatan Tambahan (Opsional)")
             
-            submitted = st.form_submit_button("🚀 Kirim ke Panitia", use_container_width=True)
+            submitted = st.form_submit_button("🚀 Kirim ke Google Drive", use_container_width=True)
 
             if submitted:
-                if uploaded_file is not None:
-                    # Simulasi pesan sukses
-                    st.success(f"✅ Terima kasih {name}! File '{uploaded_file.name}' berhasil diterima.")
-                    st.balloons()
+                if uploaded_file is not None and name:
+                    with st.spinner('Sedang mengirim file ke Drive... mohon tunggu...'):
+                        # Format nama file agar rapi di Drive: [Kategori] - [Nama Pengirim] - [Nama File]
+                        final_filename = f"[{category}] - {name} - {uploaded_file.name}"
+                        
+                        # Proses Upload
+                        file_id, file_link = upload_to_drive(uploaded_file, final_filename, uploaded_file.type)
+                        
+                        if file_id:
+                            st.success(f"✅ Berhasil! Terima kasih {name}, file sudah masuk ke sistem.")
+                            st.balloons()
+                        else:
+                            st.error("❌ Gagal mengupload. Pastikan konfigurasi Secrets sudah benar.")
+                            
+                elif not name:
+                    st.warning("⚠️ Mohon isi **Nama Pengirim** agar kami tahu siapa yang mengirim.")
                 else:
-                    st.error("⚠️ Mohon pilih file terlebih dahulu sebelum mengirim.")
+                    st.error("⚠️ Mohon pilih file foto/video terlebih dahulu.")
 
 # --- FOOTER ---
 st.markdown("---")
