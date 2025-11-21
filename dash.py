@@ -4,17 +4,18 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 
 # --- KONFIGURASI GOOGLE DRIVE ---
-# ID Folder diambil dari link yang Anda berikan
+# ID Folder dari link yang Anda berikan sebelumnya
 PARENT_FOLDER_ID = "1nxAejoI_zoYfLhav6xIevj_tzdKDxx4X"
 
 def upload_to_drive(file_obj, file_name, mime_type):
     """Fungsi untuk mengupload file ke Google Drive via Service Account"""
     try:
-        # Mengambil kredensial dari st.secrets (Setting di Dashboard Streamlit Cloud)
+        # Cek apakah Secrets sudah ada
         if "gcp_service_account" not in st.secrets:
-            st.error("Secrets belum disetting! Masukkan kredensial JSON di Dashboard Streamlit.")
+            st.error("Konfigurasi Secrets tidak ditemukan. Harap setting di Dashboard Streamlit.")
             return None, None
 
+        # Autentikasi
         creds_dict = st.secrets["gcp_service_account"]
         creds = service_account.Credentials.from_service_account_info(
             creds_dict, 
@@ -28,13 +29,15 @@ def upload_to_drive(file_obj, file_name, mime_type):
             'parents': [PARENT_FOLDER_ID]
         }
         
-        # Upload file
         media = MediaIoBaseUpload(file_obj, mimetype=mime_type, resumable=True)
         
+        # --- PROSES UPLOAD ---
+        # Ditambahkan parameter 'supportsAllDrives=True' untuk kompatibilitas lebih baik
         file = service.files().create(
             body=file_metadata,
             media_body=media,
-            fields='id, webViewLink'
+            fields='id, webViewLink',
+            supportsAllDrives=True 
         ).execute()
         
         return file.get('id'), file.get('webViewLink')
@@ -237,8 +240,6 @@ elif selected_page == "Upload Dokumentasi":
                         if file_id:
                             st.success(f"✅ Berhasil! Terima kasih {name}, file sudah masuk ke sistem.")
                             st.balloons()
-                        else:
-                            st.error("❌ Gagal mengupload. Pastikan konfigurasi Secrets sudah benar.")
                             
                 elif not name:
                     st.warning("⚠️ Mohon isi **Nama Pengirim** agar kami tahu siapa yang mengirim.")
