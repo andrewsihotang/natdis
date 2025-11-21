@@ -8,7 +8,6 @@ st.set_page_config(
 )
 
 # --- 2. SESSION STATE MANAGEMENT (Navigation Logic) ---
-# Initialize 'page' in session_state if it doesn't exist
 if 'page' not in st.session_state:
     st.session_state.page = "Beranda"
 
@@ -34,7 +33,7 @@ st.markdown("""
         margin-bottom: 2rem;
     }
 
-    /* CURSOR FIXES (No blinking caret in read-only areas) */
+    /* CURSOR FIXES */
     [data-testid="stAppViewContainer"] {
         caret-color: transparent;
     }
@@ -42,13 +41,14 @@ st.markdown("""
         caret-color: auto !important;
     }
 
-    /* NAVIGATION TABS STYLING (Rectangles instead of Radio Buttons) */
-    /* 1. Hide the little circle (radio input) */
+    /* NAVIGATION TABS STYLING (Fixed Width & Rectangles) */
+    
+    /* 1. Hide the radio circle */
     [data-testid="stSidebar"] [role="radiogroup"] > label > div:first-child {
         display: none;
     }
     
-    /* 2. Style the rectangle box */
+    /* 2. Style the rectangle box - UPDATED for Full Width */
     [data-testid="stSidebar"] [role="radiogroup"] > label {
         padding: 12px 20px;
         background-color: white;
@@ -57,6 +57,11 @@ st.markdown("""
         border: 1px solid #e0e0e0;
         transition: all 0.3s ease;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        
+        /* KEY CHANGES FOR UNIFORM SIZE */
+        width: 100%;        /* Forces the box to fill the sidebar width */
+        display: block;     /* Ensures it behaves like a block element */
+        text-align: center; /* Centers the text inside the box */
     }
 
     /* 3. Hover effect */
@@ -64,7 +69,6 @@ st.markdown("""
         border-color: #b30000;
         background-color: #fff5f5;
         cursor: pointer;
-        transform: translateX(5px);
     }
 
     /* 4. Active/Selected State */
@@ -91,19 +95,29 @@ def header():
 
 # --- 5. SIDEBAR NAVIGATION ---
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/1200px-Logo_of_Ministry_of_Education_and_Culture_of_Indonesia.svg.png", width=80)
+    # Updated Logo (Using 'raw' link to ensure image loads)
+    st.image("https://github.com/andrewsihotang/natdis/raw/main/logo_komunitas.png", use_container_width=True)
     
     st.header("Menu Navigasi")
     
-    # Using session_state for the value allows us to change it programmatically from the main page
     selected_page = st.radio(
         "Pilih Halaman:", 
         ["Beranda", "Media Sosial", "Upload Dokumentasi"],
-        key="page" # Binds this widget to st.session_state.page
+        key="page" 
     )
     
     st.markdown("---")
-    st.markdown("📍 **Lokasi:**\nGedung Dinas Pendidikan\nDKI Jakarta")
+    
+    # Updated Location to be Clickable
+    st.markdown("### 📍 Lokasi")
+    st.markdown(
+        """
+        <a href="https://maps.app.goo.gl/KqjqTjCErrECWbKv9" target="_blank" style="text-decoration: none; color: #333;">
+        <strong>Gedung Dinas Pendidikan<br>Provinsi DKI Jakarta</strong>
+        </a>
+        """, 
+        unsafe_allow_html=True
+    )
 
 # --- PAGE 1: BERANDA (OVERVIEW) ---
 if selected_page == "Beranda":
@@ -125,14 +139,13 @@ if selected_page == "Beranda":
     with col1:
         with st.container(border=True):
             st.markdown("### 🌐 Media Sosial")
-            st.write("Ikuti akun resmi Instagram, TikTok, YouTube, dan Facebook kami untuk update terbaru.")
-            # Clicking this button updates the session state and reruns the app
+            st.write("Ikuti akun resmi Instagram, TikTok, YouTube, dan Facebook kami.")
             st.button("👉 Buka Media Sosial", on_click=navigate_to, args=("Media Sosial",), use_container_width=True)
 
     with col2:
         with st.container(border=True):
             st.markdown("### 📸 Upload Dokumentasi")
-            st.write("Punya foto/video kegiatan latihan atau rapat? Kirimkan file Anda ke panitia di sini.")
+            st.write("Kirimkan file foto/video kegiatan latihan atau rapat ke panitia.")
             st.button("👉 Upload File", on_click=navigate_to, args=("Upload Dokumentasi",), use_container_width=True)
 
 # --- PAGE 2: MEDIA SOSIAL ---
@@ -141,12 +154,10 @@ elif selected_page == "Media Sosial":
     st.write("Terhubunglah dengan kanal resmi Komunitas Kristen & Katolik Disdik DKI Jakarta.")
     st.markdown("---")
 
-    # Function to render cards (Updated with Raw Links)
     def social_card(platform_name, handle, desc, link, icon_url, color_stripe):
         with st.container(border=True):
             c1, c2 = st.columns([1, 4])
             with c1:
-                # st.image handles URL images
                 st.image(icon_url, use_container_width=True)
             with c2:
                 st.subheader(platform_name)
@@ -157,48 +168,46 @@ elif selected_page == "Media Sosial":
     row1_col1, row1_col2 = st.columns(2)
     row2_col1, row2_col2 = st.columns(2)
 
-    # NOTE: Replaced 'blob' with 'raw' in GitHub URLs so images render correctly
-    
-    # INSTAGRAM
+    # INSTAGRAM (Updated Link)
     with row1_col1:
         social_card(
             "Instagram", 
             "@disdikdki_kriskath", 
             "Info terbaru, poster acara, dan update harian via story.", 
-            "https://instagram.com/", 
+            "https://www.instagram.com/komunitaskristenkatolikdisdik?igsh=MWlid3c5NDlmdTI1eQ%3D%3D&utm_source=qr", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_instagram.png",
             "#E1306C"
         )
 
-    # TIKTOK
+    # TIKTOK (Updated Link)
     with row1_col2:
         social_card(
             "TikTok", 
-            "@disdikdki_natal", 
+            "@disdik_kristen_katolik", 
             "Keseruan di balik layar (BTS) dan konten kreatif panitia.", 
-            "https://tiktok.com/", 
+            "https://www.tiktok.com/@disdik_kristen_katolik", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_tiktok.png",
             "#000000"
         )
 
-    # YOUTUBE
+    # YOUTUBE (Updated Link)
     with row2_col1:
         social_card(
             "YouTube", 
             "Komunitas Kristen Disdik DKI", 
             "Live streaming Ibadah Natal dan dokumentasi video high-res.", 
-            "https://youtube.com/", 
+            "https://www.youtube.com/@kristen_katolik_disdik_dki", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_youtube.png",
             "#FF0000"
         )
 
-    # FACEBOOK
+    # FACEBOOK (Updated Link)
     with row2_col2:
         social_card(
             "Facebook", 
             "Persekutuan Doa Disdik DKI", 
             "Pengumuman komunitas, album foto, dan sharing keluarga.", 
-            "https://facebook.com/", 
+            "https://www.facebook.com/share/1Cg6wWBVuM/?mibextid=wwXIfr", 
             "https://github.com/andrewsihotang/natdis/raw/main/logo_facebook.png",
             "#1877F2"
         )
