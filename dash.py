@@ -1,52 +1,4 @@
 import streamlit as st
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseUpload
-
-# --- KONFIGURASI GOOGLE DRIVE ---
-# ID Folder sesuai link yang Anda berikan
-PARENT_FOLDER_ID = "1nxAejoI_zoYfLhav6xIevj_tzdKDxx4X"
-
-def upload_to_drive(file_obj, file_name, mime_type):
-    """Fungsi untuk mengupload file ke Google Drive via Service Account"""
-    try:
-        # Cek konfigurasi Secrets
-        if "gcp_service_account" not in st.secrets:
-            st.error("Konfigurasi Secrets tidak ditemukan. Harap setting di Dashboard Streamlit.")
-            return None, None
-
-        # Autentikasi
-        creds_dict = st.secrets["gcp_service_account"]
-        creds = service_account.Credentials.from_service_account_info(
-            creds_dict, 
-            scopes=['https://www.googleapis.com/auth/drive']
-        )
-        
-        # Gunakan cache_discovery=False untuk stabilitas di Streamlit Cloud
-        service = build('drive', 'v3', credentials=creds, cache_discovery=False)
-
-        file_metadata = {
-            'name': file_name,
-            'parents': [PARENT_FOLDER_ID]
-        }
-        
-        # --- PERBAIKAN UTAMA DI SINI ---
-        # resumable=False: File langsung dikirim ke folder tujuan (memakai kuota pemilik folder),
-        # sehingga tidak memakan kuota Service Account yang 0 GB.
-        media = MediaIoBaseUpload(file_obj, mimetype=mime_type, resumable=False)
-        
-        file = service.files().create(
-            body=file_metadata,
-            media_body=media,
-            fields='id, webViewLink',
-            supportsAllDrives=True 
-        ).execute()
-        
-        return file.get('id'), file.get('webViewLink')
-        
-    except Exception as e:
-        st.error(f"Terjadi kesalahan koneksi ke Google Drive: {e}")
-        return None, None
 
 # --- 1. PAGE CONFIGURATION ---
 st.set_page_config(
@@ -79,10 +31,6 @@ st.markdown("""
         text-align: center; 
         margin-bottom: 2rem;
     }
-
-    /* CURSOR FIXES */
-    [data-testid="stAppViewContainer"] { caret-color: transparent; }
-    input, textarea { caret-color: auto !important; }
 
     /* NAVIGATION TABS STYLING */
     [data-testid="stSidebar"] [role="radiogroup"] > label > div:first-child { display: none; }
@@ -209,44 +157,37 @@ elif selected_page == "Media Sosial":
     st.markdown("---")
     st.success("💡 **Tips:** Klik tombol di atas untuk langsung membuka aplikasi.")
 
-# --- PAGE 3: UPLOAD DOKUMENTASI (INTEGRASI GOOGLE DRIVE) ---
+# --- PAGE 3: UPLOAD DOKUMENTASI (LINK GOOGLE FORM) ---
 elif selected_page == "Upload Dokumentasi":
     st.title("📂 Upload Dokumentasi")
     st.write("Halaman ini untuk Panitia atau Anggota mengumpulkan dokumentasi kegiatan.")
 
-    with st.container(border=True):
-        st.info("Silakan upload foto/video. File akan otomatis tersimpan di Google Drive Panitia.")
-        
-        with st.form("upload_form"):
-            col_a, col_b = st.columns(2)
-            with col_a:
-                name = st.text_input("Nama Pengirim")
-            with col_b:
-                category = st.selectbox("Kategori Kegiatan", ["Rapat Panitia", "Latihan Paduan Suara", "Survei Lokasi", "Persiapan Acara", "Lainnya"])
-            
-            uploaded_file = st.file_uploader("Pilih file foto atau video", type=['jpg', 'png', 'mp4', 'mov'])
-            
-            notes = st.text_area("Catatan Tambahan (Opsional)")
-            
-            submitted = st.form_submit_button("🚀 Kirim ke Google Drive", use_container_width=True)
+    # --- MASUKKAN LINK GOOGLE FORM ANDA DI SINI ---
+    # Cara buat: Buka forms.google.com -> Buat Baru -> Tambah pertanyaan "File Upload" -> Klik Send -> Copy Link
+    LINK_GOOGLE_FORM = "https://forms.gle/CONTOH_LINK_FORMULIR_ANDA" 
 
-            if submitted:
-                if uploaded_file is not None and name:
-                    with st.spinner('Sedang mengirim file ke Drive... mohon tunggu...'):
-                        # Format nama file: [Kategori] - [Nama Pengirim] - [Nama File]
-                        final_filename = f"[{category}] - {name} - {uploaded_file.name}"
-                        
-                        # Proses Upload
-                        file_id, file_link = upload_to_drive(uploaded_file, final_filename, uploaded_file.type)
-                        
-                        if file_id:
-                            st.success(f"✅ Berhasil! Terima kasih {name}, file sudah masuk ke sistem.")
-                            st.balloons()
-                            
-                elif not name:
-                    st.warning("⚠️ Mohon isi **Nama Pengirim** agar kami tahu siapa yang mengirim.")
-                else:
-                    st.error("⚠️ Mohon pilih file foto/video terlebih dahulu.")
+    with st.container(border=True):
+        col_img, col_text = st.columns([1, 3])
+        
+        with col_img:
+            # Icon Folder Besar
+            st.markdown("<div style='font-size: 4rem; text-align:center;'>📂</div>", unsafe_allow_html=True)
+        
+        with col_text:
+            st.markdown("### Kirim File ke Google Drive")
+            st.info("""
+            Karena kebijakan keamanan Google Drive Pribadi, upload dilakukan melalui **Formulir Resmi**.
+            File Anda akan langsung tersimpan aman di Storage Panitia (2TB).
+            """)
+            
+            st.markdown("1. Siapkan foto/video kegiatan.")
+            st.markdown("2. Klik tombol di bawah.")
+            st.markdown("3. Pilih file dan kirim.")
+            
+            st.write("") # Spacer
+            
+            # Tombol Link ke Form
+            st.link_button("🚀 Buka Formulir Upload", LINK_GOOGLE_FORM, use_container_width=True)
 
 # --- FOOTER ---
 st.markdown("---")
