@@ -7,12 +7,12 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 2. CSS STYLING (CLEAN & FESTIVE) ---
+# --- 2. CSS STYLING (FIXED HEADER) ---
 st.markdown("""
 <style>
-    /* 1. MENGHILANGKAN PADDING BAWAAN AGAR LEBIH RAPI */
+    /* 1. PENGATURAN JARAK ATAS (FIXED: DIPERBESAR AGAR TIDAK KETUTUPAN) */
     .block-container {
-        padding-top: 2rem !important;
+        padding-top: 3.5rem !important; /* Jarak diperbesar agar judul turun */
         padding-bottom: 2rem !important;
     }
     
@@ -22,6 +22,7 @@ st.markdown("""
         color: #b30000; 
         text-align: center; 
         font-weight: bold;
+        margin-top: 0px;
         margin-bottom: 5px;
     }
     .sub-header {
@@ -64,7 +65,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. HEADER SECTION (TANPA LOGO) ---
+# --- 3. HEADER SECTION ---
 st.markdown('<p class="main-header">🎄 Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">"Mempererat Persaudaraan, Mewujudkan Pelayanan Kasih"</p>', unsafe_allow_html=True)
 
@@ -73,7 +74,6 @@ tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
 
 # --- TAB 1: BERANDA (KATA SAMBUTAN) ---
 with tab_beranda:
-    # Menggunakan container agar teks terlihat rapi dalam bingkai
     with st.container(border=True):
         st.markdown("### ✨ Damai Sejahtera Bagi Kita Semua")
         st.markdown("---")
@@ -110,7 +110,7 @@ with tab_medsos:
     
     def social_card(platform_name, handle, link, icon_url, color_stripe):
         with st.container(border=True):
-            c1, c2 = st.columns([1, 4]) # Kolom icon lebih kecil
+            c1, c2 = st.columns([1, 4]) 
             with c1:
                 st.image(icon_url, use_container_width=True)
             with c2:
