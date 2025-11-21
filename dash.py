@@ -200,7 +200,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 3. HEADER SECTION ---
-st.markdown('<p class="main-header">🎄 Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-header">Natal Dinas Pendidikan DKI Jakarta</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">"Mempererat Persaudaraan, Mewujudkan Pelayanan Kasih"</p>', unsafe_allow_html=True)
 
 # --- 4. TABS NAVIGATION ---
@@ -209,7 +209,7 @@ tab_beranda, tab_medsos = st.tabs(["🏠 Beranda", "🌐 Media Sosial"])
 # --- TAB 1: BERANDA ---
 with tab_beranda:
     with st.container(border=True):
-        st.markdown("<h3 style='color: #333;'>✨ Damai Sejahtera Bagi Kita Semua</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color: #333;'>Damai Sejahtera Bagi Kita Semua</h3>", unsafe_allow_html=True)
         st.markdown("---")
         
         st.markdown("""
@@ -239,7 +239,7 @@ with tab_beranda:
 
 # --- TAB 2: MEDIA SOSIAL ---
 with tab_medsos:
-    st.markdown("<h3 style='color: #333;'>📱 Tetap Terhubung Bersama Kami</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #333;'>Tetap Terhubung Bersama Kami</h3>", unsafe_allow_html=True)
     st.caption("Ikuti update terbaru seputar kegiatan, ibadah, dan dokumentasi acara melalui kanal resmi kami.")
 
     def render_social_card_html(platform, handle, link, icon_url, color_theme):
@@ -290,3 +290,4 @@ with tab_medsos:
 
 # --- FOOTER ---
 st.markdown('<p class="footer-text">Tim Multimedia - Komunitas Kristen & Katolik Disdik DKI Jakarta</p>', unsafe_allow_html=True)
+
